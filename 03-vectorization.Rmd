@@ -1,0 +1,101 @@
+# Vectorization
+
+Most of the 'magic' in R expressions is done by 'vectorized' operations and the **vector recycling**. You've already seen vectorized operations several times, like:
+
+```
+1:10 > 5
+```
+
+  * `1:10` creates an `interger` vector of `length` 10 (check yourself)
+  * `5` is recycled 10 times to match the length of the longer vector
+  * `>` comparison is performed, returning `logical` vector of length 10
+  
+Try this:
+
+```
+1:10 + 1:2
+```
+
+Can you explain the result?
+
+```
+1:10 + rep(c(1, 2), times=5)
+```
+
+Now try this:
+
+```
+1:10 + 1:3
+```
+
+# Vectorized functions
+
+Many of the basic R functions are vectorized - they work the same for a single argument and for a vector of arguments.
+
+```
+sum(4)
+sum(1:10)
+
+mean(4)
+mean(1:10)
+```
+
+_Single value is usually treated a vector of length 1.
+Hence the `[1]` when it prints to console. It shows you the value at position `1` in the resulting vector. When you print enough to fill one row in your console, you'll see the next index._
+
+```
+1:200
+```
+
+Because many standard operations are vectorized, the functions you write are vectorized without any additional work:
+```
+fib <- function(n) {
+  ifelse(n > 1, 
+         fib(n - 1) + fib(n - 2),
+         n)
+}
+
+fib(5)
+
+fib(1:10)
+```
+
+But what if you use something that does not like vector arguments - like `grep` (which means 'search for string' because of historical reasons).
+
+```
+count_in_vec <- function(what, where) {
+  grep(what, where) %>% length
+}
+
+# counting various species of Streptococcus
+count_in_vec("Streptococcus", dtaxons$taxon_name)
+
+# now I'd like to search for both Streptococcus and Veillonella
+count_in_vec(c("Veillonella", "Streptococcus"), dtaxons$taxon_name) 
+```
+
+The cure here is the `sapply` function, which calls a function for each element in a
+vector and return the results as a new vector.
+
+```
+add_one <- function(x) x + 1
+sapply(1:5, add_one)
+
+# you can pass additional arguments like this
+add_num <- function(x, num) x + num
+sapply(1:5, add_num, num = 3)
+
+# or you don't have to name your function
+sapply(1:5, function(x) x + 1)
+```
+
+Now we can vectorize our function now easily:
+```
+count_in_vec <- function(what, where) {
+  sapply(what, function(x) grep(x, where) %>% length)
+}
+
+# as an extra we get the names..
+count_in_vec("Streptococcus", dtaxons$taxon_name)
+count_in_vec(c("Veillonella", "Streptococcus"), dtaxons$taxon_name) 
+```
