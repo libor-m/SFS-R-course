@@ -12,7 +12,9 @@
 
 ## Rmd styles
 
-http://nogginfuel.com/envisioned-css/
-http://rstudio.github.io/tufte/envisioned/
-http://rstudio.github.io/tufte/
-https://github.com/juba/rmdformats
+Which could be worth considering..
+
+  * http://nogginfuel.com/envisioned-css/
+  * http://rstudio.github.io/tufte/envisioned/
+  * http://rstudio.github.io/tufte/
+  * https://github.com/juba/rmdformats
